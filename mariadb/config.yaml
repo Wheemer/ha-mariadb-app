@@ -1,0 +1,43 @@
+---
+version: 0.1.0
+slug: mariadb_server
+name: MariaDB Server
+description: MariaDB Server for Home Assistant, based on Debian packages
+url: https://github.com/Wheemer/ha-mariadb-app
+arch:
+  - amd64
+backup_post: unlock-tables-for-backup
+backup_pre: lock-tables-for-backup
+image: ghcr.io/wheemer/{arch}-app-mariadb-server
+init: false
+stage: experimental
+options:
+  databases:
+    - homeassistant
+  logins:
+    - password: null
+      username: homeassistant
+  rights:
+    - database: homeassistant
+      username: homeassistant
+ports:
+  3306/tcp: null
+schema:
+  databases:
+    - str
+  logins:
+    - username: str
+      password: password
+  rights:
+    - database: str
+      privileges:
+        - "list(ALTER|CREATE|CREATE ROUTINE|CREATE TEMPORARY TABLES|\
+          CREATE VIEW|DELETE|DELETE HISTORY|DROP|EVENT|GRANT OPTION|INDEX|\
+          INSERT|LOCK TABLES|SELECT|SHOW VIEW|TRIGGER|UPDATE)?"
+      username: str
+  mariadb_server_args:
+    - str?
+services:
+  - mysql:provide
+startup: system
+timeout: 300
