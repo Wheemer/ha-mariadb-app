@@ -1,5 +1,8 @@
 ---
 configuration:
+  data_path:
+    name: Data path
+    description: External database storage path under /media or /share.
   databases:
     name: Databases
     description: Database names.

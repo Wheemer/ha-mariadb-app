@@ -3,8 +3,7 @@ port=3306
 bind-address=0.0.0.0
 log_error=mariadb.err
 
-# Persistent storage location
-datadir=/data/databases
+# Persistent storage location is set by the app's data_path option at startup.
 
 # Use a proper collation set
 character-set-server = utf8mb4

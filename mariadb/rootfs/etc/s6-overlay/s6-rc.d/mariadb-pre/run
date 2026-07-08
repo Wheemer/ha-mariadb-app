@@ -4,8 +4,21 @@
 # ==============================================================================
 # Pre-start initialization of MariaDB service
 # ==============================================================================
-MARIADB_DATA=/data/databases
+MARIADB_DATA=$(bashio::config "data_path")
 NEW_INSTALL=false
+
+case "${MARIADB_DATA}" in
+    /media/*|/share/*) ;;
+    *)
+        bashio::log.fatal "data_path must be under /media or /share so database files stay outside app backup data"
+        exit 1
+        ;;
+esac
+
+if [ "${MARIADB_DATA}" = "/media" ] || [ "${MARIADB_DATA}" = "/share" ]; then
+    bashio::log.fatal "data_path must be a subdirectory, not the root of a shared folder"
+    exit 1
+fi
 
 if ! bashio::fs.directory_exists "${MARIADB_DATA}"; then
     NEW_INSTALL=true

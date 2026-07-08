@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+- Add external database storage with the `data_path` option.
+- Mount `/media` and `/share` so MariaDB data can live outside app backup data.
+
 ## 3.0.1
 
 - Fix GRANT statement generation for multiple `privileges`
