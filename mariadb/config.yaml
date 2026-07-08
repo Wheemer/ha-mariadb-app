@@ -1,5 +1,5 @@
 ---
-version: 0.1.1
+version: 0.1.2
 slug: mariadb_server
 name: MariaDB Server
 description: MariaDB Server for Home Assistant, based on Debian packages
@@ -10,8 +10,12 @@ backup_post: unlock-tables-for-backup
 backup_pre: lock-tables-for-backup
 image: ghcr.io/wheemer/{arch}-app-mariadb-server
 init: false
+map:
+  - media:rw
+  - share:rw
 stage: experimental
 options:
+  data_path: /media/mariadb/databases
   databases:
     - homeassistant
   logins:
@@ -23,6 +27,7 @@ options:
 ports:
   3306/tcp: null
 schema:
+  data_path: str
   databases:
     - str
   logins:

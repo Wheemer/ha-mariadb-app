@@ -25,6 +25,7 @@ Example app configuration:
 ```yaml
 databases:
   - homeassistant
+data_path: /media/mariadb/databases
 logins:
   - username: homeassistant
     password: PASSWORD
@@ -38,6 +39,13 @@ rights:
     privileges:
       - SELECT
 ```
+
+### Option: `data_path` (required)
+
+External database storage path. This must be a subdirectory under `/media` or
+`/share`, for example `/media/mariadb/databases`. Keeping the database files
+outside `/data` prevents app backups from including the full MariaDB datadir
+when Home Assistant creates automatic app backups.
 
 ### Option: `databases` (required)
 
