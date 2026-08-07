@@ -1,5 +1,5 @@
 ---
-version: 0.1.2
+version: 0.1.3
 slug: mariadb_server
 name: MariaDB Server
 description: MariaDB Server for Home Assistant, based on Debian packages
