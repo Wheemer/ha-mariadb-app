@@ -28,7 +28,7 @@ RUN \
         mariadb-client=1:11.8.8-1 \
         mariadb-backup=1:11.8.8-1 \
         pwgen \
-    && c_rehash \
+    && update-ca-certificates \
     && S6_ARCH="${BUILD_ARCH}" \
     && if [ "${BUILD_ARCH}" = "amd64" ]; then S6_ARCH="x86_64"; fi \
     && curl -L -s "https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz" \
