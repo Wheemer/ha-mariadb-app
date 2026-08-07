@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+- Move the app base from Debian Trixie to **Debian Forky**.
+- Upgrade MariaDB packages from 11.8.6 to **11.8.8**.
+- Install s6-overlay, bashio, and tempio directly on the Forky base image.
+
 ## 0.1.2
 
 - Add external database storage with the `data_path` option.
