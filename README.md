@@ -13,7 +13,7 @@ path so large databases do not live inside the app's normal backup payload.
 It can host the Home Assistant Recorder database and databases for other LAN
 services. The app supports only `amd64`.
 
-## Important Backup Note
+## Backups
 
 The default `data_path` is `/media/mariadb/databases`. Data stored there is
 outside the app's private data directory and is not included in a normal app
@@ -82,17 +82,5 @@ and schedule that restart as the final short cutover step.
 
 ## Updates
 
-GitHub checks Debian MariaDB, Bashio, s6-overlay, Tempio, base images, and workflow
-actions every week. It also opens an issue when the official Home Assistant MariaDB
-app changes and needs a compatibility review. Dependency updates are cloud-built
-and opened as pull requests; they are never merged or installed automatically.
-
-Merging a reviewed update publishes a new image at
-`ghcr.io/wheemer/amd64-app-mariadb-server:<version>`. Installing it in Home
-Assistant remains a manual decision.
-
-## Upstream
-
-- [Official Home Assistant MariaDB app](https://github.com/home-assistant/addons/tree/master/mariadb)
-- [MariaDB](https://mariadb.org/)
-- [Debian packages](https://packages.debian.org/)
+Tracked dependency releases are test-built, published, and merged automatically.
+Home Assistant installs new app versions when automatic updates are enabled.
