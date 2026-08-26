@@ -44,8 +44,8 @@ jobs:
           docker build \
             --build-arg BUILD_VERSION="${{ steps.version.outputs.version }}" \
             --build-arg BUILD_ARCH=amd64 \
-            --build-arg BUILD_NAME="MariaDB Server" \
-            --build-arg BUILD_DESCRIPTION="MariaDB Server for Home Assistant" \
+            --build-arg BUILD_NAME="MariaDB Server Enhanced" \
+            --build-arg BUILD_DESCRIPTION="A current MariaDB server for Home Assistant with external data storage" \
             --build-arg BUILD_REPOSITORY="${{ github.repository }}" \
             --build-arg BUILD_REF="${{ github.sha }}" \
             --build-arg BUILD_DATE="$(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
