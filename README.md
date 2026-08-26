@@ -1,4 +1,4 @@
-# MariaDB Server
+# MariaDB Server Enhanced
 ### A current MariaDB database app for Home Assistant with external data storage
 
 [![Home Assistant App](https://img.shields.io/badge/HOME%20ASSISTANT-APP-41BDF5?style=for-the-badge&logo=home-assistant&logoColor=white&labelColor=555555)](https://www.home-assistant.io/apps/)
@@ -6,7 +6,7 @@
 [![Latest release](https://img.shields.io/github/v/release/Wheemer/ha-mariadb-app?style=for-the-badge&logo=github&logoColor=white&label=RELEASE&labelColor=555555&color=22C55E)](https://github.com/Wheemer/ha-mariadb-app/releases/latest)
 [![Publish](https://img.shields.io/github/actions/workflow/status/Wheemer/ha-mariadb-app/publish.yml?style=for-the-badge&label=BUILD&labelColor=555555)](https://github.com/Wheemer/ha-mariadb-app/actions/workflows/publish.yml)
 
-MariaDB Server is a focused fork of the official Home Assistant MariaDB app.
+MariaDB Server Enhanced is a focused fork of the official Home Assistant MariaDB app.
 It uses current Debian MariaDB packages and adds a configurable external data
 path so large databases do not live inside the app's normal backup payload.
 
@@ -26,7 +26,7 @@ replication plan before using the app for important databases.
 
 1. Select the button above, or open **Settings > Apps > App store > Repositories**.
 2. Add `https://github.com/Wheemer/ha-mariadb-app`.
-3. Install **MariaDB Server** from the app store.
+3. Install **MariaDB Server Enhanced** from the app store.
 4. Configure the data path, databases, users, passwords, and grants before starting.
 5. Start the app and confirm the log reports that MariaDB is ready for connections.
 

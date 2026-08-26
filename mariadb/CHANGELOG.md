@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5
+
+- Rename the app to MariaDB Server Enhanced to distinguish this maintained fork.
+
 ## 0.1.4
 
 - Promote the tested app metadata from experimental to stable.

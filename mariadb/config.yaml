@@ -1,8 +1,8 @@
 ---
-version: 0.1.4
+version: 0.1.5
 slug: mariadb_server
-name: MariaDB Server
-description: MariaDB Server for Home Assistant, based on Debian packages
+name: MariaDB Server Enhanced
+description: A current MariaDB server for Home Assistant with external data storage
 url: https://github.com/Wheemer/ha-mariadb-app
 arch:
   - amd64

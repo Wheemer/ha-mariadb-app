@@ -1,4 +1,4 @@
-# MariaDB Server
+# MariaDB Server Enhanced
 
 MariaDB for Home Assistant on `amd64`, using current Debian packages and a
 configurable external data directory.
