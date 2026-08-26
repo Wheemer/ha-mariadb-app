@@ -1,0 +1,80 @@
+name: Check upstream releases
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 9 * * 1"
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Resolve Debian MariaDB version
+        id: mariadb
+        run: |
+          version="$(docker run --rm debian:forky-slim bash -c \
+            'apt-get update >/dev/null 2>&1 && apt-cache policy mariadb-server' \
+            | awk '/Candidate:/ { sub(/^1:/, "", $2); print $2 }')"
+          test -n "$version"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Check pinned upstream releases
+        id: update
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 scripts/update-upstream.py --mariadb-version "${{ steps.mariadb.outputs.version }}"
+
+      - name: Build proposed image
+        if: steps.update.outputs.changed == 'true'
+        run: |
+          docker build \
+            --build-arg BUILD_ARCH=amd64 \
+            --build-arg BUILD_VERSION="${{ steps.update.outputs.version }}" \
+            --build-arg BUILD_NAME="MariaDB Server" \
+            --build-arg BUILD_DESCRIPTION="MariaDB Server for Home Assistant" \
+            --build-arg BUILD_REPOSITORY="${{ github.repository }}" \
+            --build-arg BUILD_REF="${{ github.sha }}" \
+            mariadb
+
+      - name: Open or refresh dependency pull request
+        if: steps.update.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branch="automation/upstream-updates"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add mariadb/config.yaml mariadb/Dockerfile mariadb/CHANGELOG.md
+          git commit -m "Update pinned upstream dependencies"
+          git push --force origin "$branch"
+          gh pr create \
+            --base main \
+            --head "$branch" \
+            --title "Update pinned upstream dependencies" \
+            --body "Automated upstream update. The proposed image completed a clean cloud build. Review and merge to publish it to GHCR; Home Assistant installation remains manual." \
+            || gh pr edit "$branch" --title "Update pinned upstream dependencies"
+
+      - name: Report official app changes for review
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          reviewed="$(tr -d '[:space:]' < .github/upstream-ref)"
+          latest="$(gh api 'repos/home-assistant/addons/commits?path=mariadb&per_page=1' --jq '.[0].sha')"
+          if [ "$latest" = "$reviewed" ]; then
+            exit 0
+          fi
+          title="Review newer official Home Assistant MariaDB app changes"
+          if gh issue list --state open --search "in:title $title" --json number --jq 'length' | grep -q '^0$'; then
+            gh issue create \
+              --title "$title" \
+              --body "The official Home Assistant MariaDB app changed after reviewed commit \`$reviewed\`. Review changes through \`$latest\` and port only the parts compatible with this app's Debian base and external data path. Update \`.github/upstream-ref\` after that review."
+          fi
