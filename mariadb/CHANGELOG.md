@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.5
+
+- BASHIO_VERSION v0.17.5 -> v0.19.0.
+- S6_OVERLAY_VERSION 3.2.3.0 -> 3.2.3.2.
+
 ## 0.1.4
 
 - Promote the tested app metadata from experimental to stable.
