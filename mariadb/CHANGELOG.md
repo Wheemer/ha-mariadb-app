@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.6
+
+- Upgrade Bashio from 0.17.5 to 0.19.0.
+- Upgrade s6-overlay from 3.2.3.0 to 3.2.3.2.
+- Keep MariaDB at Debian Forky's current 11.8.8 packages and Tempio at 2026.07.0.
+
 ## 0.1.5
 
 - Rename the app to MariaDB Server Enhanced to distinguish this maintained fork.

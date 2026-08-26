@@ -1,5 +1,5 @@
 ---
-version: 0.1.5
+version: 0.1.6
 slug: mariadb_server
 name: MariaDB Server Enhanced
 description: A current MariaDB server for Home Assistant with external data storage
