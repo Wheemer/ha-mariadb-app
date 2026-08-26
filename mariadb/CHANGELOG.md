@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.4
+
+- Promote the tested app metadata from experimental to stable.
+- Add automated dependency checks, upstream review alerts, and cloud build validation.
+
 ## 0.1.3
 
 - Move the app base from Debian Trixie to **Debian Forky**.
