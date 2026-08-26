@@ -1,0 +1,70 @@
+name: Quality and security
+
+on:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "45 7 * * 0"
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Lint workflows
+        run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.12 -color
+
+      - name: Lint shell scripts
+        shell: bash
+        run: |
+          while IFS= read -r -d '' file; do
+            if head -n 1 "$file" | grep -Eq '^#!.*(sh|bash)'; then
+              shellcheck -x -s bash "$file"
+            fi
+          done < <(find mariadb/rootfs scripts -type f -print0)
+
+      - name: Lint Dockerfile
+        uses: hadolint/hadolint-action@v3.5.0
+        with:
+          dockerfile: mariadb/Dockerfile
+          failure-threshold: error
+
+  build-and-scan:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Build image
+        run: |
+          docker build \
+            --build-arg BUILD_VERSION=ci \
+            --build-arg BUILD_ARCH=amd64 \
+            --build-arg BUILD_NAME="MariaDB Server Enhanced" \
+            --build-arg BUILD_DESCRIPTION="A current MariaDB server for Home Assistant with external data storage" \
+            --build-arg BUILD_REPOSITORY="${{ github.repository }}" \
+            --build-arg BUILD_REF="${{ github.sha }}" \
+            --tag app-under-test:ci \
+            mariadb
+
+      - name: Scan image
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: app-under-test:ci
+          format: sarif
+          output: trivy-results.sarif
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          exit-code: 1
+
+      - name: Upload scan results
+        if: always()
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: trivy-results.sarif
