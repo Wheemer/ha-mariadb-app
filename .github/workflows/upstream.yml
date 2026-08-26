@@ -8,6 +8,7 @@ on:
 permissions:
   contents: write
   issues: write
+  packages: write
   pull-requests: write
 
 jobs:
@@ -42,9 +43,22 @@ jobs:
             --build-arg BUILD_DESCRIPTION="A current MariaDB server for Home Assistant with external data storage" \
             --build-arg BUILD_REPOSITORY="${{ github.repository }}" \
             --build-arg BUILD_REF="${{ github.sha }}" \
+            --tag "ghcr.io/wheemer/amd64-app-mariadb-server:${{ steps.update.outputs.version }}" \
             mariadb
 
-      - name: Open or refresh dependency pull request
+      - name: Log in to GitHub Container Registry
+        if: steps.update.outputs.changed == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish tested image
+        if: steps.update.outputs.changed == 'true'
+        run: docker push "ghcr.io/wheemer/amd64-app-mariadb-server:${{ steps.update.outputs.version }}"
+
+      - name: Open and merge dependency pull request
         if: steps.update.outputs.changed == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -56,12 +70,29 @@ jobs:
           git add mariadb/config.yaml mariadb/Dockerfile mariadb/CHANGELOG.md
           git commit -m "Update pinned upstream dependencies"
           git push --force origin "$branch"
-          gh pr create \
-            --base main \
-            --head "$branch" \
-            --title "Update pinned upstream dependencies" \
-            --body "Automated upstream update. The proposed image completed a clean cloud build. Review and merge to publish it to GHCR; Home Assistant installation remains manual." \
-            || gh pr edit "$branch" --title "Update pinned upstream dependencies"
+          pr_url="$(gh pr list --base main --head "$branch" --state open --json url --jq '.[0].url')"
+          if [ -z "$pr_url" ]; then
+            pr_url="$(gh pr create \
+              --base main \
+              --head "$branch" \
+              --title "Update pinned upstream dependencies" \
+              --body "Automated upstream update. The proposed image completed a clean cloud build and was published to GHCR. This pull request is merged automatically; Home Assistant installs the new app version through auto-update.")"
+          else
+            gh pr edit "$pr_url" \
+              --title "Update pinned upstream dependencies" \
+              --body "Automated upstream update. The proposed image completed a clean cloud build and was published to GHCR. This pull request is merged automatically; Home Assistant installs the new app version through auto-update."
+          fi
+          gh pr merge "$pr_url" --squash --delete-branch
+
+      - name: Publish GitHub release
+        if: steps.update.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "v${{ steps.update.outputs.version }}" \
+            --target main \
+            --title "v${{ steps.update.outputs.version }}" \
+            --generate-notes
 
       - name: Report official app changes for review
         env:
