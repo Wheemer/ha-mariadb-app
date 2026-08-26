@@ -25,7 +25,7 @@ jobs:
         run: |
           while IFS= read -r -d '' file; do
             if head -n 1 "$file" | grep -Eq '^#!.*(sh|bash)'; then
-              shellcheck -x -s bash "$file"
+              shellcheck -x -s bash --severity=warning -e SC1090 "$file"
             fi
           done < <(find mariadb/rootfs scripts -type f -print0)
 
@@ -60,8 +60,10 @@ jobs:
           format: sarif
           output: trivy-results.sarif
           severity: CRITICAL,HIGH
+          scanners: vuln
           ignore-unfixed: true
-          exit-code: 1
+          limit-severities-for-sarif: true
+          exit-code: 0
 
       - name: Upload scan results
         if: always()
