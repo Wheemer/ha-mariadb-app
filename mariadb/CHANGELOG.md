@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.7
+
+- MariaDB packages 11.8.8-1 -> 11.8.9+ds-2.
+
 ## 0.1.6
 
 - Upgrade Bashio from 0.17.5 to 0.19.0.
