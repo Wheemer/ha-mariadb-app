@@ -24,9 +24,9 @@ RUN \
         jq \
         tzdata \
         xz-utils \
-        mariadb-server=1:11.8.8-1 \
-        mariadb-client=1:11.8.8-1 \
-        mariadb-backup=1:11.8.8-1 \
+        mariadb-server=1:11.8.9+ds-2 \
+        mariadb-client=1:11.8.9+ds-2 \
+        mariadb-backup=1:11.8.9+ds-2 \
         pwgen \
     && update-ca-certificates \
     && S6_ARCH="${BUILD_ARCH}" \
