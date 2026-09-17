@@ -4,7 +4,7 @@
 [![Home Assistant App](https://img.shields.io/badge/HOME%20ASSISTANT-APP-41BDF5?style=for-the-badge&logo=home-assistant&logoColor=white&labelColor=555555)](https://www.home-assistant.io/apps/)
 [![AMD64](https://img.shields.io/badge/AMD64-SUPPORTED-22C55E?style=for-the-badge&labelColor=555555)](https://github.com/Wheemer/ha-mariadb-app)
 [![Latest release](https://img.shields.io/github/v/release/Wheemer/ha-mariadb-app?style=for-the-badge&logo=github&logoColor=white&label=RELEASE&labelColor=555555&color=22C55E)](https://github.com/Wheemer/ha-mariadb-app/releases/latest)
-[![Publish](https://img.shields.io/github/actions/workflow/status/Wheemer/ha-mariadb-app/publish.yml?style=for-the-badge&label=BUILD&labelColor=555555)](https://github.com/Wheemer/ha-mariadb-app/actions/workflows/publish.yml)
+[![Build](https://img.shields.io/github/actions/workflow/status/Wheemer/ha-mariadb-app/quality.yml?branch=main&style=for-the-badge&label=BUILD&labelColor=555555)](https://github.com/Wheemer/ha-mariadb-app/actions/workflows/quality.yml)
 
 MariaDB Server Enhanced is a focused fork of the official Home Assistant MariaDB app.
 It uses current Debian MariaDB packages and adds a configurable external data
