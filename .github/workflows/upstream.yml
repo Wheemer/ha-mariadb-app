@@ -23,9 +23,10 @@ jobs:
       - name: Resolve Debian MariaDB version
         id: mariadb
         run: |
-          version="$(docker run --rm debian:forky-slim bash -c \
-            'apt-get update >/dev/null 2>&1 && apt-cache policy mariadb-server' \
-            | awk '/Candidate:/ { sub(/^1:/, "", $2); print $2 }')"
+          version="$(curl --fail --silent --show-error --location --retry 4 --retry-all-errors \
+            'https://deb.debian.org/debian/dists/forky/main/binary-amd64/Packages.gz' \
+            | gzip -dc \
+            | awk 'BEGIN { RS="" } $1 == "Package:" && $2 == "mariadb-server" { for (i = 1; i <= NF; i++) if ($i == "Version:") { sub(/^1:/, "", $(i + 1)); print $(i + 1); exit } }')"
           test -n "$version"
           echo "version=$version" >> "$GITHUB_OUTPUT"
 
