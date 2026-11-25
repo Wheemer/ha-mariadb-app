@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.9
+
+- BASHIO_VERSION v0.19.0 -> v0.20.0.
+
 ## 0.1.8
 
 - MariaDB packages 11.8.9+ds-2 -> 11.8.9+ds-4.
